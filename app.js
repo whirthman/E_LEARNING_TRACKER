@@ -392,6 +392,51 @@ document.addEventListener('DOMContentLoaded', ()=>{
   populateCategorySelect();
   populateLanguagesSelect();
 
+  // Hamburger menu toggle
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('navMenu');
+  if(hamburger){
+    hamburger.addEventListener('click', ()=>{
+      navMenu.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    });
+    // Close menu when clicking outside
+    document.addEventListener('click', (e)=>{
+      if(!e.target.closest('.top')){
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+      }
+    });
+  }
+
+  // Category filter toggle
+  const categoryToggle = document.getElementById('categoryToggle');
+  const categoryDropdown = document.getElementById('categoryDropdown');
+  const expandBtn = document.getElementById('expandCategories');
+  
+  if(categoryToggle){
+    categoryToggle.addEventListener('click', ()=>{
+      categoryDropdown.classList.toggle('active');
+      categoryToggle.classList.toggle('active');
+    });
+  }
+
+  if(expandBtn){
+    expandBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const select = document.getElementById('filterCategory');
+      const isExpanded = select.size > 1;
+      if(isExpanded){
+        select.size = 1;
+        expandBtn.textContent = 'Show More';
+      } else {
+        const optionCount = select.options.length;
+        select.size = Math.min(optionCount, 8);
+        expandBtn.textContent = 'Show Less';
+      }
+    });
+  }
+
   // new session button / modal wiring
   const modal = document.getElementById('modal');
   const detailsModal = document.getElementById('detailsModal');
@@ -399,6 +444,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const closeModal = document.getElementById('closeModal');
   const closeDetailsModal = document.getElementById('closeDetailsModal');
   newBtn.addEventListener('click', ()=>{
+    navMenu.classList.remove('active');
+    hamburger.classList.remove('active');
     clearForm();
     document.getElementById('sessionNumber').value = nextSessionNumber(loadSessions());
     document.getElementById('date').value = (new Date()).toISOString().slice(0,10);

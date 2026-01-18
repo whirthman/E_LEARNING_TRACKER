@@ -9,14 +9,21 @@
   <body>
     <div class="app">
       <header class="top">
-        <div class="brand">Learning Journal</div>
-        <div class="actions">
-          <button id="newBtn">+ New Session</button>
-          <button id="exportBtn">Export CSV</button>
-          <button id="importBtn">Import CSV</button>
-          <button id="clearDataBtn">Clear Data</button>
-          <input id="csvFile" type="file" accept=".csv" style="display:none">
+        <div class="header-left">
+          <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <div class="brand">📚 Learning Journal</div>
         </div>
+        <nav class="nav-menu" id="navMenu">
+          <div class="nav-group">
+            <button id="newBtn" class="nav-btn primary">+ New</button>
+            <button id="exportBtn" class="nav-btn">Export</button>
+            <button id="importBtn" class="nav-btn">Import</button>
+            <button id="clearDataBtn" class="nav-btn danger">Clear</button>
+            <input id="csvFile" type="file" accept=".csv" style="display:none">
+          </div>
+        </nav>
       </header>
 
       <section class="kpis">
@@ -29,9 +36,17 @@
       <main class="main">
         <aside class="left">
           <div class="controls">
-            <input id="search" placeholder="Search topic, notes, category" />
-            <select id="filterCategory"><option value="">All Categories</option></select>
-            <select id="filterType"><option value="">All Types</option><option>New</option><option>Practice</option><option>Revision</option><option>Rewatch</option><option>DeepDive</option></select>
+            <input id="search" placeholder="🔍 Search topic, notes, category" />
+            <div class="filter-group">
+              <div class="category-filter">
+                <button class="filter-toggle" id="categoryToggle">📂 Categories <span class="toggle-icon">▼</span></button>
+                <div class="category-dropdown" id="categoryDropdown">
+                  <select id="filterCategory"><option value="">All Categories</option></select>
+                  <button class="expand-btn" id="expandCategories">Show More</button>
+                </div>
+              </div>
+              <select id="filterType" class="filter-select"><option value="">📋 All Types</option><option>New</option><option>Practice</option><option>Revision</option><option>Rewatch</option><option>DeepDive</option></select>
+            </div>
           </div>
 
           <div class="table-wrap panel">
