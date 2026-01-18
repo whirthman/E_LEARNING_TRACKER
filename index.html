@@ -27,10 +27,23 @@
       </header>
 
       <section class="kpis">
-        <div class="kpi"><div class="kpi-label">Total Sessions</div><div id="totalSessions">0</div></div>
-        <div class="kpi"><div class="kpi-label">Total Time</div><div id="totalTime">0 min</div></div>
-        <div class="kpi"><div class="kpi-label">Sessions / Category</div><div id="categoryCounts">—</div></div>
-        <div class="kpi"><div class="kpi-label">Streak</div><div id="streak">0</div></div>
+        <div class="kpi">
+          <div class="kpi-label">📚 Sessions</div>
+          <div class="kpi-value" id="totalSessions">0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">⏱️ Time Spent</div>
+          <div class="kpi-value"><span id="totalTime">0</span> <span class="kpi-unit">min</span><div class="kpi-sub" id="totalTimeHours">0 hrs</div></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">📂 Categories</div>
+          <div class="kpi-value kpi-categories" id="categoryCounts">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">🔥 Streak</div>
+          <div class="kpi-value" id="streak">0</div>
+          <div class="kpi-sub">days</div>
+        </div>
       </section>
 
       <main class="main">

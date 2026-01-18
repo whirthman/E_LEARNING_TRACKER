@@ -122,13 +122,44 @@ function calculateAnalytics(){
   const sessions = loadSessions();
   document.getElementById('totalSessions').textContent = sessions.length;
   const totalMin = sessions.reduce((a,b)=>a + (parseInt(b.durationMinutes)||0),0);
-  document.getElementById('totalTime').textContent = `${totalMin} min (${(totalMin/60).toFixed(1)} hrs)`;
+  document.getElementById('totalTime').textContent = `${totalMin} min`;
+  document.getElementById('totalTimeHours').textContent = `${(totalMin/60).toFixed(1)} hrs`;
 
   // sessions per category
   const counts = {};
   sessions.forEach(s=>{ counts[s.category] = (counts[s.category]||0) + 1; });
   const catDiv = document.getElementById('categoryCounts');
-  catDiv.innerHTML = Object.keys(counts).length ? Object.entries(counts).map(([c,n])=>`${escapeHtml(c)}:${n}`).join(' • ') : '—';
+  const entries = Object.entries(counts);
+  
+  if(entries.length === 0){
+    catDiv.innerHTML = '<span class="empty-state">—</span>';
+  } else {
+    const visible = entries.slice(0, 3);
+    const hidden = entries.slice(3);
+    let html = visible.map(([c,n])=>`<span class="cat-badge">${escapeHtml(c)}: <strong>${n}</strong></span>`).join('');
+    
+    if(hidden.length > 0){
+      html += `<button class="expand-cat-btn" id="expandCatBtn">+${hidden.length} more</button>`;
+    }
+    
+    catDiv.innerHTML = html;
+    
+    if(hidden.length > 0){
+      document.getElementById('expandCatBtn').addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const currentExpanded = catDiv.classList.contains('expanded');
+        if(!currentExpanded){
+          const allHtml = entries.map(([c,n])=>`<span class="cat-badge">${escapeHtml(c)}: <strong>${n}</strong></span>`).join('');
+          catDiv.innerHTML = allHtml + `<button class="expand-cat-btn" id="expandCatBtn">Show less</button>`;
+          catDiv.classList.add('expanded');
+          document.getElementById('expandCatBtn').addEventListener('click', (e)=>{
+            e.stopPropagation();
+            calculateAnalytics();
+          });
+        }
+      });
+    }
+  }
 
   // streak (consecutive days with sessions)
   const days = [...new Set(sessions.map(s=>s.date))].sort().reverse();
