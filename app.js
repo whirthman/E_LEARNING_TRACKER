@@ -91,11 +91,7 @@ function renderSessions(){
   sessions.forEach(s=>{
     const tr = document.createElement('tr');
     const timeRange = (s.startTime || '') + (s.endTime ? ' — ' + s.endTime : '');
-    const langs = Array.isArray(s.languageUsed) ? s.languageUsed.join(', ') : (s.languageUsed || '');
-    const modes = Array.isArray(s.learningModes) ? s.learningModes.join(', ') : (s.learningModes || '');
-    const tools = Array.isArray(s.toolsUsed) ? s.toolsUsed.join(', ') : (s.toolsUsed || '');
-    const status = s.completionStatus || '';
-    const topic = escapeHtml(s.topicTitle) + (s.resourceTitle ? `<div class="muted small">${escapeHtml(s.resourceTitle)}</div>` : '');
+    const topic = escapeHtml(s.topicTitle) + (s.resourceTitle ? `<div class="resource-sub">${escapeHtml(s.resourceTitle)}</div>` : '');
     tr.innerHTML = `
       <td>${s.sessionNumber}</td>
       <td>${s.date}</td>
@@ -104,18 +100,11 @@ function renderSessions(){
       <td>${s.durationMinutes} min</td>
       <td><span class="chip">${escapeHtml(s.category||'')}</span></td>
       <td>${escapeHtml(s.sessionType||'')}</td>
-      <td>${escapeHtml(langs)}</td>
-      <td>${escapeHtml(modes)}</td>
-      <td>${escapeHtml(tools)}</td>
-        <td>${escapeHtml(status)}</td>
-        <td>${escapeHtml(s.keyInsights || '')}</td>
-        <td>${escapeHtml(s.confusions || '')}</td>
-        <td>${escapeHtml(s.personalNotes || '')}</td>
-        <td>${escapeHtml(s.mentalState || '')}</td>
-        <td>${escapeHtml(s.physicalState || '')}</td>
-        <td>${s.mentalEffortScore != null ? escapeHtml(s.mentalEffortScore) : ''}</td>
-        <td><button class="small edit btn-icon" data-id="${s.id}" onclick="startEdit('${s.id}')"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21h4l11-11a2.8 2.8 0 0 0 0-4L19 2a2.8 2.8 0 0 0-4 0L4 13v8z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Edit</button>
-        <button class="small delete btn-icon" onclick="deleteSession('${s.id}')"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete</button></td>`;
+      <td>
+        <button class="small view btn-icon" onclick="viewSessionDetails('${s.id}')" title="View full details"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-4.5 0-8.5 3-10 7 1.5 4 5.5 7 10 7s8.5-3 10-7c-1.5-4-5.5-7-10-7z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.2"/></svg>View</button>
+        <button class="small edit btn-icon" data-id="${s.id}" onclick="startEdit('${s.id}')" title="Edit session"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21h4l11-11a2.8 2.8 0 0 0 0-4L19 2a2.8 2.8 0 0 0-4 0L4 13v8z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Edit</button>
+        <button class="small delete btn-icon" onclick="deleteSession('${s.id}')" title="Delete session"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Delete</button>
+      </td>`;
     tbody.appendChild(tr);
   });
 
@@ -152,6 +141,50 @@ function calculateAnalytics(){
 }
 
 function stripTime(d){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
+
+function viewSessionDetails(id){
+  const sessions = loadSessions();
+  const s = sessions.find(x=>x.id===id); if(!s) return;
+  window.currentViewSessionId = id;
+  
+  const modal = document.getElementById('detailsModal');
+  if(modal){
+    document.getElementById('detailsSessionNumber').textContent = s.sessionNumber;
+    document.getElementById('detailsDate').textContent = s.date + ' (' + (s.dayOfWeek || '') + ')';
+    document.getElementById('detailsTime').textContent = (s.startTime || '') + (s.endTime ? ' — ' + s.endTime : '');
+    document.getElementById('detailsTopic').textContent = s.topicTitle;
+    document.getElementById('detailsCategory').textContent = s.category || '—';
+    document.getElementById('detailsType').textContent = s.sessionType || '—';
+    document.getElementById('detailsDuration').textContent = (s.durationMinutes || 0) + ' min';
+    document.getElementById('detailsResource').textContent = s.resourceTitle ? s.resourceTitle + ' (' + (s.resourceType || '') + ')' : '—';
+    document.getElementById('detailsLanguages').textContent = (Array.isArray(s.languageUsed) ? s.languageUsed : []).join(', ') || '—';
+    document.getElementById('detailsModes').textContent = (Array.isArray(s.learningModes) ? s.learningModes : []).join(', ') || '—';
+    document.getElementById('detailsTools').textContent = (Array.isArray(s.toolsUsed) ? s.toolsUsed : []).join(', ') || '—';
+    document.getElementById('detailsStatus').textContent = s.completionStatus || '—';
+    document.getElementById('detailsDifficulty').textContent = s.difficultyLevel || '—';
+    document.getElementById('detailsFocus').textContent = s.focusLevel || '—';
+    document.getElementById('detailsUnderstanding').textContent = s.understandingLevel || '—';
+    document.getElementById('detailsInsights').textContent = s.keyInsights || '—';
+    document.getElementById('detailsConfusions').textContent = s.confusions || '—';
+    document.getElementById('detailsNotes').textContent = s.personalNotes || '—';
+    document.getElementById('detailsMentalState').textContent = s.mentalState || '—';
+    document.getElementById('detailsPhysicalState').textContent = s.physicalState || '—';
+    document.getElementById('detailsEffort').textContent = s.mentalEffortScore || '—';
+    modal.setAttribute('aria-hidden','false');
+  }
+}
+
+function editFromDetails(){
+  const id = window.currentViewSessionId;
+  if(id){
+    document.getElementById('detailsModal').setAttribute('aria-hidden','true');
+    startEdit(id);
+  }
+}
+
+function closeDetailsModalBtn(){
+  document.getElementById('detailsModal').setAttribute('aria-hidden','true');
+}
 
 function startEdit(id){
   const sessions = loadSessions();
@@ -361,8 +394,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   // new session button / modal wiring
   const modal = document.getElementById('modal');
+  const detailsModal = document.getElementById('detailsModal');
   const newBtn = document.getElementById('newBtn');
   const closeModal = document.getElementById('closeModal');
+  const closeDetailsModal = document.getElementById('closeDetailsModal');
   newBtn.addEventListener('click', ()=>{
     clearForm();
     document.getElementById('sessionNumber').value = nextSessionNumber(loadSessions());
@@ -372,7 +407,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const t = document.getElementById('topicTitle'); if(t) t.focus();
   });
   closeModal.addEventListener('click', ()=>{ modal.setAttribute('aria-hidden','true'); clearForm(); });
-  window.addEventListener('click', (e)=>{ if(e.target==modal){ modal.setAttribute('aria-hidden','true'); clearForm(); } });
+  closeDetailsModal.addEventListener('click', ()=>{ detailsModal.setAttribute('aria-hidden','true'); });
+  window.addEventListener('click', (e)=>{ if(e.target==modal){ modal.setAttribute('aria-hidden','true'); clearForm(); } if(e.target==detailsModal){ detailsModal.setAttribute('aria-hidden','true'); } });
 
   // add category / language buttons
   const addCatBtn = document.getElementById('addCategoryBtn');
@@ -407,3 +443,6 @@ window.updateSession = updateSession;
 window.deleteSession = deleteSession;
 window.renderSessions = renderSessions;
 window.calculateAnalytics = calculateAnalytics;
+window.viewSessionDetails = viewSessionDetails;
+window.editFromDetails = editFromDetails;
+window.closeDetailsModalBtn = closeDetailsModalBtn;

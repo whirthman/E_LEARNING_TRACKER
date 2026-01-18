@@ -38,7 +38,7 @@
             <table id="sessionsTable">
               <thead>
                     <tr>
-                      <th>#</th><th>Date</th><th>Time</th><th>Topic</th><th>Duration</th><th>Category</th><th>Type</th><th>Languages</th><th>Modes</th><th>Tools</th><th>Status</th><th>Insights</th><th>Confusions</th><th>Notes</th><th>Mental</th><th>Physical</th><th>Effort</th><th>Actions</th>
+                      <th>#</th><th>Date</th><th>Time</th><th>Topic</th><th>Duration</th><th>Category</th><th>Type</th><th>Actions</th>
                     </tr>
               </thead>
               <tbody></tbody>
@@ -208,6 +208,117 @@
           </div>
         </div>
       </main>
+
+      <!-- Session Details Modal -->
+      <div id="detailsModal" class="modal" aria-hidden="true">
+        <div class="modal-content details-content">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="margin:0">📋 Session #<span id="detailsSessionNumber">0</span></h3>
+            <button id="closeDetailsModal" class="actions" aria-label="Close">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="detail-label">📅 Date</span>
+              <span id="detailsDate">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">🕐 Time</span>
+              <span id="detailsTime">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">⏱️ Duration</span>
+              <span id="detailsDuration">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">📂 Category</span>
+              <span id="detailsCategory">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">🎯 Type</span>
+              <span id="detailsType">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">✅ Status</span>
+              <span id="detailsStatus">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">📊 Difficulty</span>
+              <span id="detailsDifficulty">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">🎯 Focus</span>
+              <span id="detailsFocus">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">💡 Understanding</span>
+              <span id="detailsUnderstanding">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">🧠 Mental State</span>
+              <span id="detailsMentalState">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">💪 Physical</span>
+              <span id="detailsPhysicalState">—</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">⚡ Effort</span>
+              <span id="detailsEffort">—</span>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4>📖 Topic & Resource</h4>
+            <div class="detail-item-full">
+              <span class="detail-label">Topic Title</span>
+              <span id="detailsTopic">—</span>
+            </div>
+            <div class="detail-item-full">
+              <span class="detail-label">Resource</span>
+              <span id="detailsResource">—</span>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4>🛠️ Learning Details</h4>
+            <div class="detail-item-full">
+              <span class="detail-label">Languages / Frameworks</span>
+              <span id="detailsLanguages">—</span>
+            </div>
+            <div class="detail-item-full">
+              <span class="detail-label">Learning Modes</span>
+              <span id="detailsModes">—</span>
+            </div>
+            <div class="detail-item-full">
+              <span class="detail-label">Tools Used</span>
+              <span id="detailsTools">—</span>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4>📝 Notes & Observations</h4>
+            <div class="detail-item-full">
+              <span class="detail-label">💡 Key Insights</span>
+              <span id="detailsInsights" class="detail-textarea">—</span>
+            </div>
+            <div class="detail-item-full">
+              <span class="detail-label">❓ Confusions</span>
+              <span id="detailsConfusions" class="detail-textarea">—</span>
+            </div>
+            <div class="detail-item-full">
+              <span class="detail-label">📌 Personal Notes</span>
+              <span id="detailsNotes" class="detail-textarea">—</span>
+            </div>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn-primary" onclick="editFromDetails()"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 21h4l11-11a2.8 2.8 0 0 0 0-4L19 2a2.8 2.8 0 0 0-4 0L4 13v8z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Edit Session</button>
+            <button class="btn-secondary" onclick="closeDetailsModalBtn()"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Close</button>
+          </div>
+        </div>
+      </div>
 
       <footer class="footer">All data stored locally in your browser. No backend.</footer>
     </div>

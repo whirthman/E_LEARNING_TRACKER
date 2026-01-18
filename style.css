@@ -26,8 +26,7 @@ body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:line
 .controls{display:flex;gap:8px;margin-bottom:10px}
 .controls input,.controls select{padding:10px;border-radius:10px;border:1px solid rgba(6,32,23,0.06);background:transparent;color:var(--text)}
 /* table wrapper for horizontal scroll */
-.table-wrap{overflow:auto;border-radius:10px;padding:6px}
-table{min-width:1100px}
+.table-wrap{overflow-x:auto;border-radius:10px;padding:6px;max-height:70vh}
 table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:10px;overflow:hidden}
 thead th{background:transparent;text-align:left;padding:12px;font-size:13px;color:var(--muted)}
 tbody td{padding:12px;border-top:1px solid rgba(6,32,23,0.04);font-size:14px;color:var(--text)}
@@ -48,6 +47,21 @@ textarea{min-height:80px}
 .modal-content{width:100%;max-width:900px;background:var(--panel);border-radius:14px;padding:18px;border:1px solid rgba(6,32,23,0.06);box-shadow:0 20px 50px rgba(6,32,23,0.12);max-height:calc(100vh - 80px);overflow:auto}
 .modal-content h3{margin:0 0 8px 0}
 .modal-content #languagesSelect{height:120px}
+.details-content{max-width:700px;max-height:calc(100vh - 80px)}
+.details-content h4{margin:16px 0 10px 0;font-size:14px;color:var(--accent);border-bottom:1px solid rgba(6,32,23,0.06);padding-bottom:8px;display:flex;align-items:center;gap:8px}
+.details-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.detail-item{display:flex;flex-direction:column;padding:10px;background:rgba(139,92,246,0.03);border-radius:8px}
+.detail-item-full{display:flex;flex-direction:column;margin-bottom:12px;padding:10px;background:rgba(139,92,246,0.02);border-radius:8px}
+.detail-label{font-size:12px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;font-weight:600;display:flex;align-items:center;gap:6px}
+.detail-item span:last-child,.detail-item-full span:last-child{font-size:14px;color:var(--text);word-break:break-word;font-weight:500}
+.detail-textarea{white-space:pre-wrap;line-height:1.6;padding:10px;background:rgba(0,0,0,0.02);border-radius:6px;border-left:3px solid var(--accent)}
+.detail-section{margin-bottom:20px;padding-bottom:12px;border-bottom:1px dashed rgba(6,32,23,0.08)}
+.detail-section:last-of-type{border-bottom:none}
+.detail-actions{display:flex;gap:10px;margin-top:24px;padding-top:16px;border-top:1px solid rgba(6,32,23,0.06)}
+.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:white;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 20px rgba(139,92,246,0.12);transition:transform .15s ease,box-shadow .15s ease}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(139,92,246,0.18)}
+.btn-secondary{background:transparent;border:1px solid rgba(6,32,23,0.12);color:var(--text);padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all .15s ease}
+.btn-secondary:hover{background:rgba(6,32,23,0.04);border-color:rgba(6,32,23,0.18)}
 .small{font-size:13px;padding:8px 10px;border-radius:8px;border:1px solid rgba(6,32,23,0.06);background:transparent;color:var(--text)}
 .small.edit{color:var(--accent);border-color:rgba(22,163,74,0.12)}
 .small.delete{color:var(--danger);border-color:rgba(239,68,68,0.12)}
@@ -64,6 +78,9 @@ textarea{min-height:80px}
 /* Row hover */
 tbody tr:hover{background:linear-gradient(90deg,#f7fff9,#f1fff3);transform:translateY(-2px);transition:all .12s ease}
 
+/* Truncated text styling */
+.truncated-text{display:block;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
+
 /* prevent horizontal overflow of body */
 html,body{overflow-x:hidden}
 
@@ -71,6 +88,12 @@ html,body{overflow-x:hidden}
 .btn-icon{display:inline-flex;align-items:center;gap:8px}
 .btn-icon svg{width:16px;height:16px;opacity:0.95}
 .small svg{width:14px;height:14px}
+
+.btn-primary svg, .btn-secondary svg{width:16px;height:16px}
+
+.small.view{color:#0ea5e9;border-color:rgba(6,126,214,0.12)}
+
+.resource-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:400}
 
 .pulse{transition:transform .18s ease}
 .pulse:hover{transform:translateY(-3px) scale(1.02)}
