@@ -116,13 +116,15 @@ function populateCategoryFilter(){
   const cats = JSON.parse(localStorage.getItem('lj_categories')||'[]');
   const sel = document.getElementById('filterCategory');
   sel.innerHTML = '<option value="">All Categories</option>' + cats.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
+  // Show 3 categories initially
+  sel.size = Math.min(3 + 1, cats.length + 1); // +1 for "All Categories"
 }
 
 function calculateAnalytics(){
   const sessions = loadSessions();
   document.getElementById('totalSessions').textContent = sessions.length;
   const totalMin = sessions.reduce((a,b)=>a + (parseInt(b.durationMinutes)||0),0);
-  document.getElementById('totalTime').textContent = `${totalMin} min`;
+  document.getElementById('totalTime').textContent = `${totalMin}`;
   document.getElementById('totalTimeHours').textContent = `${(totalMin/60).toFixed(1)} hrs`;
 
   // sessions per category
@@ -134,12 +136,16 @@ function calculateAnalytics(){
   if(entries.length === 0){
     catDiv.innerHTML = '<span class="empty-state">—</span>';
   } else {
-    const visible = entries.slice(0, 3);
-    const hidden = entries.slice(3);
+    const isExpanded = catDiv.dataset.expanded === 'true';
+    const visibleCount = isExpanded ? entries.length : Math.min(3, entries.length);
+    const visible = entries.slice(0, visibleCount);
+    const hidden = entries.slice(visibleCount);
+    
     let html = visible.map(([c,n])=>`<span class="cat-badge">${escapeHtml(c)}: <strong>${n}</strong></span>`).join('');
     
     if(hidden.length > 0){
-      html += `<button class="expand-cat-btn" id="expandCatBtn">+${hidden.length} more</button>`;
+      const btnText = isExpanded ? 'Show less' : `+${hidden.length} more`;
+      html += `<button class="expand-cat-btn" id="expandCatBtn">${btnText}</button>`;
     }
     
     catDiv.innerHTML = html;
@@ -147,16 +153,8 @@ function calculateAnalytics(){
     if(hidden.length > 0){
       document.getElementById('expandCatBtn').addEventListener('click', (e)=>{
         e.stopPropagation();
-        const currentExpanded = catDiv.classList.contains('expanded');
-        if(!currentExpanded){
-          const allHtml = entries.map(([c,n])=>`<span class="cat-badge">${escapeHtml(c)}: <strong>${n}</strong></span>`).join('');
-          catDiv.innerHTML = allHtml + `<button class="expand-cat-btn" id="expandCatBtn">Show less</button>`;
-          catDiv.classList.add('expanded');
-          document.getElementById('expandCatBtn').addEventListener('click', (e)=>{
-            e.stopPropagation();
-            calculateAnalytics();
-          });
-        }
+        catDiv.dataset.expanded = isExpanded ? 'false' : 'true';
+        calculateAnalytics();
       });
     }
   }
@@ -456,12 +454,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
     expandBtn.addEventListener('click', (e)=>{
       e.stopPropagation();
       const select = document.getElementById('filterCategory');
-      const isExpanded = select.size > 1;
+      const optionCount = select.options.length;
+      const initialSize = Math.min(4, optionCount); // 3 categories + "All Categories"
+      const isExpanded = select.size > initialSize;
       if(isExpanded){
-        select.size = 1;
+        select.size = initialSize;
         expandBtn.textContent = 'Show More';
       } else {
-        const optionCount = select.options.length;
         select.size = Math.min(optionCount, 8);
         expandBtn.textContent = 'Show Less';
       }
